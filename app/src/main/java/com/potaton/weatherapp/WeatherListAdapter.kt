@@ -7,16 +7,14 @@ import com.potaton.weatherapp.tab2.Tab2Fragment
 import com.potaton.weatherapp.tab3.Tab3Fragment
 import com.potaton.weatherapp.tab4.Tab4Fragment
 import com.potaton.weatherapp.tab5.Tab5Fragment
-import com.potaton.weatherapp.tab6.Tab6Fragment
-import com.potaton.weatherapp.tab7.Tab7Fragment
-
-// 1週間分のフラグメント 0~6
-
-private const val NUM_PAGES = 7
 
 class WeatherListAdapter(
     fragment: Fragment,
-) : FragmentStateAdapter(fragment) {
+
+    ) : FragmentStateAdapter(fragment) {
+
+    // 5日分のフラグメント 0~4
+    private val NUM_PAGES = 5
 
     override fun getItemCount(): Int = NUM_PAGES
 
@@ -27,8 +25,6 @@ class WeatherListAdapter(
             2 -> return Tab3Fragment()
             3 -> return Tab4Fragment()
             4 -> return Tab5Fragment()
-            5 -> return Tab6Fragment()
-            6 -> return Tab7Fragment()
         }
         return Tab1Fragment()
     }
