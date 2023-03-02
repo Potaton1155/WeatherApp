@@ -10,7 +10,6 @@ import com.potaton.weatherapp.tab5.Tab5Fragment
 
 class WeatherListAdapter(
     fragment: Fragment,
-
     ) : FragmentStateAdapter(fragment) {
 
     // 5日分のフラグメント 0~4

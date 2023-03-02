@@ -20,6 +20,9 @@ data class WeatherEntry(
     val pop: Double,
     val sys: Sys,
     val dt_txt: String,
+    //null許容にしておかないと、データ取得時にrain,snowフィールドがない場合、"MissingFieldException"がでてアプリがクラッシュする
+    var rain: Rain? = null,
+    var snow: Snow? = null,
 )
 
 @SerialName("MainData")
@@ -37,7 +40,7 @@ data class MainData(
 @Serializable
 data class Weather(
     //天気詳細
-    val description: String
+    val description: String,
 )
 
 @SerialName("Wind")
@@ -54,6 +57,20 @@ data class Wind(
 data class Sys(
     //データ取得時間
     val pod: String,
+)
+
+@SerialName("Rain")
+@Serializable
+data class Rain(
+    //降水量
+    var three_hour_rain: Double? = 0.0,
+)
+
+@SerialName("Snow")
+@Serializable
+data class Snow(
+    //降雪量
+    var three_hour_snow: Double? = 0.0,
 )
 
 @SerialName("City")

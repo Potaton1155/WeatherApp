@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +16,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="gravity"
-            app:tabMode="scrollable">
+            app:tabGravity="fill"
+            app:tabIndicatorFullWidth="true"
+            app:tabIndicatorGravity="bottom"
+            app:tabMode="fixed">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -39,11 +43,18 @@
 
         </com.google.android.material.tabs.TabLayout>
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPagerLayout"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal" />
+            android:layout_height="match_parent">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal" />
+        </androidx.core.widget.NestedScrollView>
+
     </LinearLayout>
+
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

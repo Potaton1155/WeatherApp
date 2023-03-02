@@ -74,10 +74,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     if (location != null) {
                         val gml = getMyLocation(location)
                         getMyLocationWeather(gml.first, gml.second)
-
+                        Toast.makeText(requireContext(), "更新が完了しました", Toast.LENGTH_SHORT).show()
                         swipeLayout.isRefreshing = false
                     } else {
-                        Toast.makeText(requireContext(), "位置情報を取得できませんでした", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), getString(R.string.not_get_location), Toast.LENGTH_LONG).show()
                         swipeLayout.isRefreshing = false
                     }
                 }
@@ -93,6 +93,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         ) return
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDestroyView() {
@@ -148,5 +152,4 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun weatherJsonTask(result: String) {
         sharedViewModel.data.value = result
     }
-
 }

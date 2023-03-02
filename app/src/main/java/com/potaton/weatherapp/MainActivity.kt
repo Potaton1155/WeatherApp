@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             LOCATION_CODE -> if (grantResults[0] != PackageManager.PERMISSION_GRANTED || grantResults.isEmpty()) {
-                Toast.makeText(this, "アプリを使用するには、設定から位置情報をオンにしてください", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.turn_on_location), Toast.LENGTH_LONG).show()
             }
         }
     }
