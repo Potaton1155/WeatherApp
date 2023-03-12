@@ -13,7 +13,6 @@ import com.potaton.weatherapp.databinding.FragmentTab1Binding
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlin.math.roundToInt
-import kotlin.math.sign
 
 class Tab1Fragment : Fragment(R.layout.fragment_tab1) {
     private var _binding: FragmentTab1Binding? = null
@@ -34,8 +33,8 @@ class Tab1Fragment : Fragment(R.layout.fragment_tab1) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedViewModel.data.observe(viewLifecycleOwner) { data ->
-            val weatherResponse = json.decodeFromString<WeatherResponse>(data)
+        sharedViewModel.weatherData.observe(viewLifecycleOwner) { weatherData ->
+            val weatherResponse = json.decodeFromString<WeatherResponse>(weatherData)
 
             binding.apply {
                 //場所
@@ -45,24 +44,23 @@ class Tab1Fragment : Fragment(R.layout.fragment_tab1) {
                 //天気
                 weatherText.text = weatherResponse.list[0].weather[0].description
                 //雨
-                rainText.text = nullCheck(weatherResponse.list[0].rain?.three_hour_rain) + "mm"
+                rainText.text = nullCheck(weatherResponse.list[0].rain?.`3h`) + "mm"
                 //雪
-                snowText.text = nullCheck(weatherResponse.list[0].snow?.three_hour_snow) + "mm"
+                snowText.text = nullCheck(weatherResponse.list[0].snow?.`3h`) + "mm"
                 //湿度
                 humidityText.text = weatherResponse.list[0].main.humidity.toString()
+                //風向き・風速
+                windText.text = weatherResponse.list[0].wind.speed.toString() + "m/s"
+                //日の出 Long型を時間に直す
+//                sunRiseText.text =
+                //日の入
             }
         }
     }
 
-    private fun nullCheck(d: Double?): String {
-        val result = if (d != null) {
-            toString()
-        } else {
-            ""
-        }
-        return result
+    private fun nullCheck(d: Float?): String {
+        return d?.toString() ?: "0"
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

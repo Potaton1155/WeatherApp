@@ -10,21 +10,21 @@ import com.potaton.weatherapp.tab5.Tab5Fragment
 
 class WeatherListAdapter(
     fragment: Fragment,
-    ) : FragmentStateAdapter(fragment) {
+) : FragmentStateAdapter(fragment) {
 
-    // 5日分のフラグメント 0~4
-    private val NUM_PAGES = 5
+    private val fragments = listOf(
+        Tab1Fragment(),
+        Tab2Fragment(),
+        Tab3Fragment(),
+        Tab4Fragment(),
+        Tab5Fragment()
+    )
 
-    override fun getItemCount(): Int = NUM_PAGES
+    override fun getItemCount(): Int {
+        return fragments.size
+    }
 
     override fun createFragment(position: Int): Fragment {
-        when (position) {
-            0 -> return Tab1Fragment()
-            1 -> return Tab2Fragment()
-            2 -> return Tab3Fragment()
-            3 -> return Tab4Fragment()
-            4 -> return Tab5Fragment()
-        }
-        return Tab1Fragment()
+        return fragments[position]
     }
 }

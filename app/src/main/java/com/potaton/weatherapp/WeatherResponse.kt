@@ -17,12 +17,12 @@ data class WeatherEntry(
     val main: MainData,
     val weather: List<Weather>,
     val wind: Wind,
-    val pop: Double,
+    val pop: Float,
     val sys: Sys,
     val dt_txt: String,
-    //null許容にしておかないと、データ取得時にrain,snowフィールドがない場合、"MissingFieldException"がでてアプリがクラッシュする
-    var rain: Rain? = null,
-    var snow: Snow? = null,
+    //null許容にしておかないと、データ取得時にrain,snowフィールドがない場合、"MissingFieldException"でアプリがクラッシュする
+    val rain: Rain? = null,
+    val snow: Snow? = null,
 )
 
 @SerialName("MainData")
@@ -30,8 +30,8 @@ data class WeatherEntry(
 data class MainData(
     //気温
     val temp: Double,
-    val temp_min: Double,
-    val temp_max: Double,
+    val temp_min: Float,
+    val temp_max: Float,
     //湿度
     val humidity: Int,
 )
@@ -47,7 +47,7 @@ data class Weather(
 @Serializable
 data class Wind(
     //風速
-    val speed: Double,
+    val speed: Float,
     //風向き
     val deg: Int,
 )
@@ -63,14 +63,14 @@ data class Sys(
 @Serializable
 data class Rain(
     //降水量
-    var three_hour_rain: Double? = 0.0,
+    val `3h`: Float? = 0.0F,
 )
 
 @SerialName("Snow")
 @Serializable
 data class Snow(
     //降雪量
-    var three_hour_snow: Double? = 0.0,
+    val `3h`: Float? = 0.0F,
 )
 
 @SerialName("City")

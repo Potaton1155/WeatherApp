@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayoutMediator
@@ -41,14 +42,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     //位置情報取得用プロパティ
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
+    private var latitude: Float = 0.0F
+    private var longitude: Float = 0.0F
 
     // 日付取得用プロパティ
     private val formatter = DateTimeFormatter.ofPattern("MM/dd")
-    private var oneWeekStr = arrayOfNulls<String>(5)
+    private val oneWeekStr = arrayOfNulls<String>(5)
     private lateinit var getDate: LocalDateTime
     private lateinit var getDateResult: String
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -66,22 +68,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         binding.apply {
+            viewPagerLayout.apply {
+                adapter = WeatherListAdapter(this@HomeFragment)
+            }
 
-            viewPagerLayout.adapter = WeatherListAdapter(this@HomeFragment)
-            swipeLayout.setOnRefreshListener {
-                //スワイプ(reload)した際の更新処理
-                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                    if (location != null) {
-                        val gml = getMyLocation(location)
-                        getMyLocationWeather(gml.first, gml.second)
-                        Toast.makeText(requireContext(), "更新が完了しました", Toast.LENGTH_SHORT).show()
-                        swipeLayout.isRefreshing = false
-                    } else {
-                        Toast.makeText(requireContext(), getString(R.string.not_get_location), Toast.LENGTH_LONG).show()
-                        swipeLayout.isRefreshing = false
+            swipeLayout.apply {
+                //縦スワイプ(reload)した際の更新処理
+                setOnRefreshListener {
+                    fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                        if (location != null) {
+                            val gml = getMyLocation(location)
+                            getMyLocationWeather(gml.first, gml.second)
+                            Toast.makeText(requireContext(), "更新が完了しました", Toast.LENGTH_SHORT).show()
+                            swipeLayout.isRefreshing = false
+                        } else {
+                            Toast.makeText(requireContext(), getString(R.string.not_get_location), Toast.LENGTH_LONG).show()
+                            swipeLayout.isRefreshing = false
+                        }
                     }
                 }
             }
+
         }
 
         TabLayoutMediator(binding.tabLayout, binding.viewPagerLayout) { tab, position ->
@@ -95,14 +102,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         ) return
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
+    //画面回転してもレイアウトを保持するようにする
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 
     //一週間分の日付文字を取得
     private fun getOneWeek(i: Int): String {
@@ -112,15 +119,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     //場所を取得(緯度、経度)
-    private fun getMyLocation(location: Location): Pair<Double, Double> {
-        latitude = location.latitude
-        longitude = location.longitude
+    private fun getMyLocation(location: Location): Pair<Float, Float> {
+        latitude = location.latitude.toFloat()
+        longitude = location.longitude.toFloat()
         return Pair(latitude, longitude)
     }
 
     //取得した緯度と経度、API_KEYを埋め込み文字列を作成
-    private fun getMyLocationWeather(latitude: Double, longitude: Double) {
-        val siteUrl = "https://api.openweathermap.org/data/2.5/forecast?lang=ja"
+    private fun getMyLocationWeather(latitude: Float, longitude: Float) {
+        val siteUrl = "https://api.openweathermap.org/data/2.5/forecast?lang=ja&cnt=1"
         val weatherStr = "$siteUrl&lat=$latitude&lon=$longitude&units=metric&appid=$API_KEY"
         weatherTask(weatherStr)
     }
@@ -150,6 +157,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     //取得したJSONデータを各fragmentへ渡す
     private fun weatherJsonTask(result: String) {
-        sharedViewModel.data.value = result
+        sharedViewModel.weatherData.value = result
     }
 }
